@@ -1,6 +1,49 @@
 from  graphics import GraphicsWindow
 import math
 
+isCorrectInput = False
+minutes = 0
+seconds = 0
+
+MAX_MINUTES = 8
+MAX_SECONDS = 0
+MAX_SECONDS = MAX_MINUTES * 60 + MAX_SECONDS
+totalSeconds = minutes * 60 + seconds
+percentage = 0.0
+
+while not isCorrectInput:
+    minutesString = (input("Please enter minutes: "))
+    secondsString = (input("Please enter seconds: "))
+    try:
+        minutes = int(minutesString)
+        seconds = int(secondsString)
+
+        if minutes >= 0 and seconds >= 0:
+            if seconds <= 60:
+                isCorrectInput = True
+            else:
+                enteredSeconds = seconds
+                extraMinutes = enteredSeconds / 60
+                seconds = enteredSeconds % 60
+                minutes += extraMinutes
+                print(
+                    "You entered %i seconds! I went ahead and converted this into %i extra minute(s) and %i seconds" % (
+                        enteredSeconds, extraMinutes, seconds))
+                isCorrectInput = True
+        else:
+            print("Correct numerical input, but one or more numbers given were negative less then 0, please retry.")
+    except ValueError:
+        print("Input was not a number, please try entering minutes and seconds again")
+
+print("Final time: %i minutes and %i seconds" % (minutes, seconds))
+
+if totalSeconds >= MAX_SECONDS:
+    percentage = 1.0
+elif totalSeconds == 0:
+    percentage = 0.0  # even though percentage is initialized as 0.0 this line improves readability.
+else:
+    percentage = float(totalSeconds / MAX_SECONDS)
+
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 600
 WINDOW_CENTER_X = WINDOW_WIDTH // 2
@@ -89,22 +132,6 @@ print("Triangle base: %i , Triangle height: %i " % (triangleBase, triangleHeight
 print("Triangle surface: %i" % triangleSurface)
 print("Theta rad: %i.2 , Theta deg: %i.2" % (triangleThetaRad, triangleThetaDeg))
 
-minutes = int(input("Please enter minutes: "))
-seconds = int(input("Please enter seconds: "))
-
-MAX_MINUTES = 8
-MAX_SECONDS = 0
-MAX_SECONDS = MAX_MINUTES * 60 + MAX_SECONDS
-totalSeconds = minutes * 60 + seconds
-percentage = 0.0
-
-if totalSeconds >= MAX_SECONDS:
-    percentage = 1.0
-elif totalSeconds == 0:
-    percentage = 0.0  # even though percentage is initialized as 0.0 this line improves readability.
-else:
-    percentage = float(totalSeconds / MAX_SECONDS)
-
 
 #
 # We know that as time progresses more sand slips through the hourglass and thus over time the height gets adjusted. We can precisely test the surface area looping the height (from max to 0)
@@ -116,7 +143,7 @@ def CalculateUpperBase(p):
     if p == 0.0:
         return 0
     elif p == 1.0:
-        return  triangleHeight
+        return triangleHeight
 
     targetSurface = triangleSurface * p
     for i in range(int(triangleHeight), 0,
@@ -135,7 +162,8 @@ upperFilledTriangleWidth = upperFilledTriangleHeight * math.tan(triangleThetaRad
 upperFilledOffsetX = OFFSET_X + (triangleBase - upperFilledTriangleWidth) / 2
 upperFilledOffsetY = OFFSET_Y + (triangleHeight - upperFilledTriangleHeight)
 
-lowerFilledTriangleHeight = CalculateUpperBase(1 - percentage)  # Calculate the complement of 100% for the lower triangle
+lowerFilledTriangleHeight = CalculateUpperBase(
+    1 - percentage)  # Calculate the complement of 100% for the lower triangle
 lowerFilledTriangleWidth = lowerFilledTriangleHeight * math.tan(triangleThetaRad) * 2
 lowerFilledOffsetX = OFFSET_X + (triangleBase - lowerFilledTriangleWidth) / 2
 lowerFilledOffsetY = WINDOW_CENTER_Y + (triangleHeight - lowerFilledTriangleHeight)
