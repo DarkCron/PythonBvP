@@ -37,6 +37,8 @@ while not isCorrectInput:
 
 print("Final time: %i minutes and %i seconds" % (minutes, seconds))
 
+totalSeconds = minutes * 60 + seconds
+
 if totalSeconds >= MAX_SECONDS:
     percentage = 1.0
 elif totalSeconds == 0:
